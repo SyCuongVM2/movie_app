@@ -12,7 +12,7 @@ class MovieModel extends MovieEntity {
   final List<int>? genreIds;
   final String backdropPath;
   final bool? adult;
-  final String? overview;
+  final String overview;
   final String posterPath;
   final double? popularity;
   final String? mediaType;
@@ -29,7 +29,7 @@ class MovieModel extends MovieEntity {
     this.genreIds,
     required this.backdropPath,
     this.adult,
-    this.overview,
+    required this.overview,
     required this.posterPath,
     this.popularity,
     this.mediaType,

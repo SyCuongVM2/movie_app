@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_app/presentation/blocs/search_movie/search_movie_bloc.dart';
 
+import '../../../presentation/widgets/app_error_widget.dart';
 import '../../../presentation/journeys/drawer/navigation_drawer.dart';
 import '../../../presentation/blocs/movie_tabbed/movie_tabbed_bloc.dart';
 import '../../../presentation/blocs/movie_backdrop/movie_backdrop_bloc.dart';
@@ -20,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late MovieCarouselBloc movieCarouselBloc;
   late MovieBackdropBloc movieBackdropBloc;
   late MovieTabbedBloc movieTabbedBloc;
+  late SearchMovieBloc searchMovieBloc;
 
   @override
   void initState() {
@@ -27,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
     movieCarouselBloc = getItInstance<MovieCarouselBloc>();
     movieBackdropBloc = movieCarouselBloc.movieBackdropBloc;
     movieTabbedBloc = getItInstance<MovieTabbedBloc>();
+    searchMovieBloc = getItInstance<SearchMovieBloc>();
     movieCarouselBloc.add(const CarouselLoadEvent());
   }
   @override
@@ -34,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
     movieCarouselBloc.close();
     movieBackdropBloc.close();
+    searchMovieBloc.close();
     movieTabbedBloc.close();
   }
 
@@ -49,6 +54,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         BlocProvider(
           create: (context) => movieTabbedBloc,
+        ),
+        BlocProvider(
+          create: (context) => searchMovieBloc,
         ),
       ],
       child: Scaffold(
@@ -74,6 +82,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: MovieTabbedWidget(),
                   ),
                 ],
+              );
+            } else if (state is MovieCarouselError) {
+              return AppErrorWidget(
+                onPressed: () => movieCarouselBloc.add(
+                  const CarouselLoadEvent(),
+                ),
+                errorType: state.errorType,
               );
             }
             return const SizedBox.shrink();

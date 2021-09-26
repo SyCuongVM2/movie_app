@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../common/constants/translation_constants.dart';
+import '../../../../common/extensions/string_extensions.dart';
+import '../../../../presentation/widgets/app_error_widget.dart';
 import '../../../../common/constants/size_constants.dart';
 import '../../../../common/extensions/size_extensions.dart';
 import '../../../../presentation/blocs/movie_tabbed/movie_tabbed_bloc.dart';
@@ -51,8 +54,29 @@ class _MovieTabbedWidgetState extends State<MovieTabbedWidget> with SingleTicker
                 ],
               ),
               if (state is MovieTabChanged)
+                state.movies?.isEmpty ?? true
+                  ? Expanded(
+                      child: Center(
+                        child: Text(
+                          TranslationConstants.noMovies.t(context),
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.subtitle1,
+                        ),
+                      ),
+                    )
+                  : Expanded(
+                    child: MovieListViewBuilder(movies: state.movies),
+                  ),
+              if (state is MovieTabLoadError)
                 Expanded(
-                  child: MovieListViewBuilder(movies: state.movies),
+                  child: AppErrorWidget(
+                    errorType: state.errorType,
+                    onPressed: () => movieTabbedBloc.add(
+                      MovieTabChangedEvent(
+                        currentTabIndex: state.currentTabIndex,
+                      ),
+                    ),
+                  ),
                 ),
             ],
           ),
