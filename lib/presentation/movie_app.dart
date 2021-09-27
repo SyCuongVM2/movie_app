@@ -6,6 +6,8 @@ import '../common/constants/route_constants.dart';
 import '../common/constants/languages.dart';
 import '../common/screenutil/screenutil.dart';
 import '../di/get_it.dart';
+import 'journeys/loading/loading_screen.dart';
+import 'blocs/loading/loading_bloc.dart';
 import 'themes/theme_text.dart';
 import 'themes/theme_color.dart';
 import 'blocs/language/language_bloc.dart';
@@ -26,6 +28,7 @@ class _MovieAppState extends State<MovieApp> {
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey();
   late LanguageBloc _languageBloc;
   late LoginBloc _loginBloc;
+  late LoadingBloc _loadingBloc;
 
   @override
   void initState() {
@@ -33,12 +36,14 @@ class _MovieAppState extends State<MovieApp> {
     _languageBloc = getItInstance<LanguageBloc>();
     _languageBloc.add(LoadPreferredLanguageEvent());
     _loginBloc = getItInstance<LoginBloc>();
+    _loadingBloc = getItInstance<LoadingBloc>();
   }
 
   @override
   void dispose() {
     _languageBloc.close();
     _loginBloc.close();
+    _loadingBloc.close();
     super.dispose();
   }
 
@@ -48,12 +53,9 @@ class _MovieAppState extends State<MovieApp> {
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider<LanguageBloc>.value(
-          value: _languageBloc,
-        ),
-        BlocProvider<LoginBloc>.value(
-          value: _loginBloc,
-        ),
+        BlocProvider<LanguageBloc>.value(value: _languageBloc),
+        BlocProvider<LoginBloc>.value(value: _loginBloc),
+        BlocProvider<LoadingBloc>.value(value: _loadingBloc),
       ],
       child: BlocBuilder<LanguageBloc, LanguageState>(
         builder: (context, state) {
@@ -82,7 +84,9 @@ class _MovieAppState extends State<MovieApp> {
                   GlobalWidgetsLocalizations.delegate,
                 ],
                 builder: (context, child) {
-                  return child!;
+                  return LoadingScreen(
+                    screen: child!,
+                  );
                 },
                 initialRoute: RouteList.initial,
                 onGenerateRoute: (RouteSettings settings) {

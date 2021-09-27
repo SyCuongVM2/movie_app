@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
 
+import '../presentation/blocs/loading/loading_bloc.dart';
 import '../data/data_sources/authentication_local_data_source.dart';
 import '../data/data_sources/authentication_remote_data_source.dart';
 import '../data/repositories/authentication_repository_impl.dart';
@@ -103,6 +104,7 @@ Future init() async {
   );
   getItInstance.registerFactory(
     () => MovieCarouselBloc(
+      loadingBloc: getItInstance(),
       getTrending: getItInstance(),
       movieBackdropBloc: getItInstance(),
     )
@@ -116,6 +118,7 @@ Future init() async {
   );
   getItInstance.registerFactory(
     () => MovieDetailBloc(
+      loadingBloc: getItInstance(),
       getMovieDetail: getItInstance(),
       castBloc: getItInstance(),
       videosBloc: getItInstance(),
@@ -134,6 +137,7 @@ Future init() async {
   );
   getItInstance.registerFactory(
     () => SearchMovieBloc(
+      loadingBloc: getItInstance(),
       searchMovies: getItInstance(),
     ),
   );
@@ -152,5 +156,7 @@ Future init() async {
   getItInstance.registerFactory(() => LoginBloc(
     loginUser: getItInstance(),
     logoutUser: getItInstance(),
+    loadingBloc: getItInstance(),
   ));
+  getItInstance.registerSingleton<LoadingBloc>(LoadingBloc());
 }

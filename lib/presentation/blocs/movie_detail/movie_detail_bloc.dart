@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../blocs/loading/loading_bloc.dart';
 import '../cast/cast_bloc.dart';
 import '../favorite/favorite_bloc.dart';
 import '../videos/videos_bloc.dart';
@@ -18,12 +19,14 @@ class MovieDetailBloc extends Bloc<MovieDetailEvent, MovieDetailState> {
   final CastBloc castBloc;
   final VideosBloc videosBloc;
   final FavoriteBloc favoriteBloc;
+  final LoadingBloc loadingBloc;
   
   MovieDetailBloc({
     required this.getMovieDetail,
     required this.castBloc,
     required this.videosBloc,
     required this.favoriteBloc,
+    required this.loadingBloc,
   }) : super(MovieDetailInitial());
 
   @override
@@ -31,6 +34,8 @@ class MovieDetailBloc extends Bloc<MovieDetailEvent, MovieDetailState> {
     MovieDetailEvent event,
   ) async* {
     if (event is MovieDetailLoadEvent) {
+      loadingBloc.add(StartLoading());
+
       final Either<AppError, MovieDetailEntity> eitherResponse = await getMovieDetail(MovieParams(event.movieId));
 
       yield eitherResponse.fold(
@@ -41,6 +46,8 @@ class MovieDetailBloc extends Bloc<MovieDetailEvent, MovieDetailState> {
       favoriteBloc.add(CheckIfFavoriteMovieEvent(event.movieId));
       castBloc.add(LoadCastEvent(movieId: event.movieId));
       videosBloc.add(LoadVideosEvent(event.movieId));
+
+      loadingBloc.add(FinishLoading());
     }
   }
 }
