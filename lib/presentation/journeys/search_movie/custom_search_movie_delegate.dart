@@ -7,7 +7,6 @@ import '../../../common/extensions/string_extensions.dart';
 import '../../../common/extensions/size_extensions.dart';
 import '../../blocs/search_movie/search_movie_bloc.dart';
 import '../../themes/theme_color.dart';
-import '../../themes/theme_text.dart';
 import '../../widgets/app_error_widget.dart';
 import 'search_movie_card.dart';
 
@@ -17,13 +16,7 @@ class CustomSearchDelegate extends SearchDelegate {
   CustomSearchDelegate(this.searchMovieBloc);
 
   @override
-  ThemeData appBarTheme(BuildContext context) {
-    return Theme.of(context).copyWith(
-      inputDecorationTheme: InputDecorationTheme(
-        hintStyle: Theme.of(context).textTheme.greySubtitle1,
-      ),
-    );
-  }
+  ThemeData appBarTheme(BuildContext context) => Theme.of(context);
   
   @override
   List<Widget> buildActions(BuildContext context) {

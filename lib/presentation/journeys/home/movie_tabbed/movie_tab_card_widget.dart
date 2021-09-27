@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../presentation/journeys/movie_detail/movie_detail_arguments.dart';
-import '../../../../presentation/journeys/movie_detail/movie_detail_screen.dart';
+import '../../../../common/constants/route_constants.dart';
 import '../../../../common/constants/size_constants.dart';
 import '../../../../common/extensions/size_extensions.dart';
 import '../../../../common/extensions/string_extensions.dart';
+import '../../movie_detail/movie_detail_arguments.dart';
 import '../../../../data/core/api_constants.dart';
 
 class MovieTabCardWidget extends StatelessWidget {
@@ -23,12 +23,9 @@ class MovieTabCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => MovieDetailScreen(
-              movieDetailArguments: MovieDetailArguments(movieId),
-            ),
-          ),
+        Navigator.of(context).pushNamed(
+          RouteList.movieDetail, 
+          arguments: MovieDetailArguments(movieId),
         );
       },
       child: Column(

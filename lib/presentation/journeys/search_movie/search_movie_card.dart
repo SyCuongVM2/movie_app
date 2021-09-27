@@ -1,13 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import 'package:movie_app/common/constants/size_constants.dart';
-import 'package:movie_app/common/extensions/size_extensions.dart';
-import 'package:movie_app/data/core/api_constants.dart';
-import 'package:movie_app/domain/entities/movie_entity.dart';
-import 'package:movie_app/presentation/journeys/movie_detail/movie_detail_arguments.dart';
-import 'package:movie_app/presentation/journeys/movie_detail/movie_detail_screen.dart';
-import 'package:movie_app/presentation/themes/theme_text.dart';
+import '../../../common/constants/route_constants.dart';
+import '../../../common/constants/size_constants.dart';
+import '../../../common/extensions/size_extensions.dart';
+import '../../../data/core/api_constants.dart';
+import '../../../domain/entities/movie_entity.dart';
+import '../movie_detail/movie_detail_arguments.dart';
+import '../../themes/theme_text.dart';
 
 class SearchMovieCard extends StatelessWidget {
   final MovieEntity movie;
@@ -21,12 +21,9 @@ class SearchMovieCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => MovieDetailScreen(
-              movieDetailArguments: MovieDetailArguments(movie.id),
-            ),
-          ),
+        Navigator.of(context).pushNamed(
+          RouteList.movieDetail, 
+          arguments: MovieDetailArguments(movie.id),
         );
       },
       child: Padding(
