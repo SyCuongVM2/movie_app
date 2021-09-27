@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../common/constants/route_constants.dart';
 import '../../../common/constants/translation_constants.dart';
 import '../../blocs/videos/videos_bloc.dart';
-import '../../journeys/watch_video/watch_video_arguments.dart';
+import '../watch_video/watch_video_arguments.dart';
 import '../../widgets/button.dart';
 
 class VideosWidget extends StatelessWidget {

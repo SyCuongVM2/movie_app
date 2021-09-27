@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wiredash/wiredash.dart';
 
+import '../../blocs/login/login_bloc.dart';
 import '../../../common/constants/route_constants.dart';
 import '../../blocs/language/language_bloc.dart';
 import '../../widgets/app_dialog.dart';
@@ -74,6 +75,19 @@ class NavigationDrawer extends StatelessWidget {
                 Navigator.of(context).pop();
                 _showDialog(context);
               },
+            ),
+            BlocListener<LoginBloc, LoginState>(
+              listenWhen: (previous, current) => current is LogoutSuccess,
+              listener: (context, state) {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  RouteList.initial, (route) => false);
+              },
+              child: NavigationListItem(
+                title: TranslationConstants.logout.t(context),
+                onPressed: () {
+                  BlocProvider.of<LoginBloc>(context).add(LogoutEvent());
+                },
+              ),
             ),
           ],
         ),

@@ -6,10 +6,11 @@ import '../common/constants/route_constants.dart';
 import '../common/constants/languages.dart';
 import '../common/screenutil/screenutil.dart';
 import '../di/get_it.dart';
-import '../presentation/app_localizations.dart';
-import './themes/theme_text.dart';
-import './themes/theme_color.dart';
+import 'themes/theme_text.dart';
+import 'themes/theme_color.dart';
 import 'blocs/language/language_bloc.dart';
+import 'blocs/login/login_bloc.dart';
+import 'app_localizations.dart';
 import 'fade_page_route_builder.dart';
 import 'routes.dart';
 import 'wiredash_app.dart';
@@ -24,17 +25,20 @@ class MovieApp extends StatefulWidget {
 class _MovieAppState extends State<MovieApp> {
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey();
   late LanguageBloc _languageBloc;
+  late LoginBloc _loginBloc;
 
   @override
   void initState() {
     super.initState();
     _languageBloc = getItInstance<LanguageBloc>();
     _languageBloc.add(LoadPreferredLanguageEvent());
+    _loginBloc = getItInstance<LoginBloc>();
   }
 
   @override
   void dispose() {
     _languageBloc.close();
+    _loginBloc.close();
     super.dispose();
   }
 
@@ -42,8 +46,15 @@ class _MovieAppState extends State<MovieApp> {
   Widget build(BuildContext context) {
     ScreenUtil.init();
 
-    return BlocProvider<LanguageBloc>.value(
-      value: _languageBloc,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<LanguageBloc>.value(
+          value: _languageBloc,
+        ),
+        BlocProvider<LoginBloc>.value(
+          value: _loginBloc,
+        ),
+      ],
       child: BlocBuilder<LanguageBloc, LanguageState>(
         builder: (context, state) {
           if (state is LanguageLoaded) {

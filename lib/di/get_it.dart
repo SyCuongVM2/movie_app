@@ -1,6 +1,13 @@
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
 
+import '../data/data_sources/authentication_local_data_source.dart';
+import '../data/data_sources/authentication_remote_data_source.dart';
+import '../data/repositories/authentication_repository_impl.dart';
+import '../domain/repositories/authentication_repository.dart';
+import '../domain/usecases/login_user.dart';
+import '../domain/usecases/logout_user.dart';
+import '../presentation/blocs/login/login_bloc.dart';
 import '../data/data_sources/language_local_data_source.dart';
 import '../data/repositories/app_repository_impl.dart';
 import '../domain/repositories/app_repository.dart';
@@ -47,18 +54,16 @@ Future init() async {
     () => MovieLocalDataSourceImpl());
   getItInstance.registerLazySingleton<LanguageLocalDataSource>(
     () => LanguageLocalDataSourceImpl());
-
+  getItInstance.registerLazySingleton<AuthenticationRemoteDataSource>(
+    () => AuthenticationRemoteDataSourceImpl(getItInstance()));
+  getItInstance.registerLazySingleton<AuthenticationLocalDataSource>(
+    () => AuthenticationLocalDataSourceImpl());
   getItInstance.registerLazySingleton<MovieRepository>(
-    () => MovieRepositoryImpl(
-      getItInstance(), 
-      getItInstance(),
-    )
-  );
+    () => MovieRepositoryImpl(getItInstance(), getItInstance()));
   getItInstance.registerLazySingleton<AppRepository>(
-    () => AppRepositoryImpl(
-      getItInstance(),
-    )
-  );
+    () => AppRepositoryImpl(getItInstance()));
+  getItInstance.registerLazySingleton<AuthenticationRepository>(
+    () => AuthenticationRepositoryImpl(getItInstance(), getItInstance()));
 
   getItInstance.registerLazySingleton<GetTrending>(
     () => GetTrending(getItInstance()));
@@ -88,6 +93,10 @@ Future init() async {
     () => UpdateLanguage(getItInstance()));
   getItInstance.registerLazySingleton<GetPreferredLanguage>(
     () => GetPreferredLanguage(getItInstance()));
+  getItInstance.registerLazySingleton<LoginUser>(
+    () => LoginUser(getItInstance()));
+  getItInstance.registerLazySingleton<LogoutUser>(
+    () => LogoutUser(getItInstance()));
 
   getItInstance.registerFactory(
     () => MovieBackdropBloc()
@@ -139,5 +148,9 @@ Future init() async {
   getItInstance.registerSingleton<LanguageBloc>(LanguageBloc(
     updateLanguage: getItInstance(),
     getPreferredLanguage: getItInstance(),
+  ));
+  getItInstance.registerFactory(() => LoginBloc(
+    loginUser: getItInstance(),
+    logoutUser: getItInstance(),
   ));
 }
