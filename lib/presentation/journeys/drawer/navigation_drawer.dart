@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wiredash/wiredash.dart';
 
-import '../../blocs/login/login_bloc.dart';
-import '../../../common/constants/route_constants.dart';
-import '../../blocs/language/language_bloc.dart';
+import '../../blocs/theme/theme_cubit.dart';
+import '../../blocs/language/language_cubit.dart';
+import '../../themes/theme_color.dart';
+import '../../blocs/login/login_cubit.dart';
 import '../../widgets/app_dialog.dart';
+import '../../widgets/logo.dart';
+import '../../../common/constants/route_constants.dart';
 import '../../../common/extensions/string_extensions.dart';
 import '../../../common/constants/translation_constants.dart';
 import '../../../common/constants/languages.dart';
 import '../../../common/constants/size_constants.dart';
 import '../../../common/extensions/size_extensions.dart';
-import '../../widgets/logo.dart';
 import 'navigation_expanded_list_item.dart';
 import 'navigation_list_item.dart';
 
@@ -55,11 +57,7 @@ class NavigationDrawer extends StatelessWidget {
               title: TranslationConstants.language.t(context),
               children: Languages.languages.map((e) => e.value).toList(),
               onPressed: (index) {
-                BlocProvider.of<LanguageBloc>(context).add(
-                  ToggleLanguageEvent(
-                    Languages.languages[index],
-                  ),
-                );
+                BlocProvider.of<LanguageCubit>(context).toggleLanguage(Languages.languages[index]);
               },
             ),
             NavigationListItem(
@@ -76,7 +74,7 @@ class NavigationDrawer extends StatelessWidget {
                 _showDialog(context);
               },
             ),
-            BlocListener<LoginBloc, LoginState>(
+            BlocListener<LoginCubit, LoginState>(
               listenWhen: (previous, current) => current is LogoutSuccess,
               listener: (context, state) {
                 Navigator.of(context).pushNamedAndRemoveUntil(
@@ -85,10 +83,28 @@ class NavigationDrawer extends StatelessWidget {
               child: NavigationListItem(
                 title: TranslationConstants.logout.t(context),
                 onPressed: () {
-                  BlocProvider.of<LoginBloc>(context).add(LogoutEvent());
+                  BlocProvider.of<LoginCubit>(context).logout();
                 },
               ),
             ),
+            const Spacer(),
+            BlocBuilder<ThemeCubit, Themes>(builder: (context, theme) {
+              return Align(
+                alignment: Alignment.center,
+                child: IconButton(
+                  onPressed: () => context.read<ThemeCubit>().toggleTheme(),
+                  icon: Icon(
+                    theme == Themes.dark
+                      ? Icons.brightness_4_sharp
+                      : Icons.brightness_7_sharp,
+                    color: context.read<ThemeCubit>().state == Themes.dark
+                      ? Colors.white
+                      : AppColor.vulcan,
+                    size: Sizes.dimen_40.w,
+                  ),
+                ),
+              );
+            }),
           ],
         ),
       ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../common/constants/size_constants.dart';
 import '../../common/extensions/size_extensions.dart';
-import '../../presentation/themes/theme_color.dart';
+import '../themes/theme_color.dart';
 
 class Separator extends StatelessWidget {
   const Separator({Key? key}) : super(key: key);

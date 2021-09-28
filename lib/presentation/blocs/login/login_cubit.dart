@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../blocs/loading/loading_bloc.dart';
+import '../loading/loading_cubit.dart';
 import '../../../common/constants/translation_constants.dart';
 import '../../../domain/entities/app_error.dart';
 import '../../../domain/entities/login_request_params.dart';
@@ -10,47 +10,48 @@ import '../../../domain/entities/no_params.dart';
 import '../../../domain/usecases/login_user.dart';
 import '../../../domain/usecases/logout_user.dart';
 
-part 'login_event.dart';
 part 'login_state.dart';
 
-class LoginBloc extends Bloc<LoginEvent, LoginState> {
+class LoginCubit extends Cubit<LoginState> {
   final LoginUser loginUser;
   final LogoutUser logoutUser;
-  final LoadingBloc loadingBloc;
-  
-  LoginBloc({
+  final LoadingCubit loadingCubit;
+
+  LoginCubit({
     required this.loginUser,
     required this.logoutUser,
-    required this.loadingBloc,
+    required this.loadingCubit,
   }) : super(LoginInitial());
 
-  @override
-  Stream<LoginState> mapEventToState(
-    LoginEvent event,
-  ) async* {
-    if (event is LoginInitiateEvent) {
-      loadingBloc.add(StartLoading());
+  void initiateLogin(String username, password) async {
+    loadingCubit.show();
 
-      final Either<AppError, bool> eitherResponse = await loginUser(
-        LoginRequestParams(
-          userName: event.username,
-          password: event.password,
-        ),
-      );
+    final Either<AppError, bool> eitherResponse = await loginUser(
+      LoginRequestParams(
+        userName: username,
+        password: password,
+      ),
+    );
 
-      yield eitherResponse.fold(
-        (l) {
-          var message = getErrorMessage(l.appErrorType);
-          return LoginError(message);
-        },
-        (r) => LoginSuccess(),
-      );
+    emit(eitherResponse.fold(
+      (l) {
+        var message = getErrorMessage(l.appErrorType);
+        print(message);
+        return LoginError(message);
+      },
+      (r) => LoginSuccess(),
+    ));
 
-      loadingBloc.add(FinishLoading());
-    } else if (event is LogoutEvent) {
-      await logoutUser(NoParams());
-      yield LogoutSuccess();
-    }
+    loadingCubit.hide();
+  }
+
+  void initiateGuestLogin() async {
+    emit(LoginSuccess());
+  }
+
+  void logout() async {
+    await logoutUser(NoParams());
+    emit(LogoutSuccess());
   }
 
   String getErrorMessage(AppErrorType appErrorType) {

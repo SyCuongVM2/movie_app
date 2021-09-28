@@ -1,26 +1,42 @@
 import '../../domain/entities/cast_entity.dart';
 
 class CastCrewResultModel {
-  late int id;
-  late List<CastModel> cast;
-  late List<Crew> crew;
+  final int id;
+  late final List<CastModel> cast;
+  late final List<Crew> crew;
 
-  CastCrewResultModel({required this.id, required this.cast, required this.crew});
+  CastCrewResultModel({
+    required this.id, 
+    required this.cast, 
+    required this.crew
+  });
 
-  CastCrewResultModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+  factory CastCrewResultModel.fromJson(Map<String, dynamic> json) {
+    var cast = List<CastModel>.empty(growable: true);
+    var crew = List<Crew>.empty(growable: true);
+    
     if (json['cast'] != null) {
-      cast = <CastModel>[];
       json['cast'].forEach((v) {
-        cast.add(CastModel.fromJson(v));
+        final castModel = CastModel.fromJson(v);
+        if (_isValidCast(castModel)) {
+          cast.add(CastModel.fromJson(v));
+        }
       });
     }
     if (json['crew'] != null) {
-      crew = <Crew>[];
       json['crew'].forEach((v) {
-        crew.add(Crew.fromJson(v));
+        final crewModel = Crew.fromJson(v);
+        if (_isValidCrew(crewModel)) {
+          crew.add(crewModel);
+        }
       });
     }
+
+    return CastCrewResultModel(
+      id: json['id'],
+      cast: cast,
+      crew: crew,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -32,6 +48,20 @@ class CastCrewResultModel {
   }
 }
 
+bool _isValidCast(CastModel castModel) {
+  return castModel.creditId.isNotEmpty &&
+    castModel.character.isNotEmpty &&
+    castModel.name.isNotEmpty &&
+    castModel.posterPath.isNotEmpty;
+}
+
+bool _isValidCrew(Crew crewModel) {
+  return crewModel.creditId.isNotEmpty &&
+    crewModel.department.isNotEmpty &&
+    crewModel.name.isNotEmpty &&
+    crewModel.profilePath.isNotEmpty;
+}
+
 class CastModel extends CastEntity {
   final int? castId;
   final String character;
@@ -40,7 +70,7 @@ class CastModel extends CastEntity {
   final int? id;
   final String name;
   final int? order;
-  final String? profilePath;
+  final String profilePath;
 
   CastModel({
     this.castId,
@@ -50,7 +80,7 @@ class CastModel extends CastEntity {
     this.id,
     required this.name,
     this.order,
-    this.profilePath,
+    required this.profilePath,
   }) : super(
     creditId: creditId,
     name: name,
@@ -61,13 +91,13 @@ class CastModel extends CastEntity {
   factory CastModel.fromJson(Map<String, dynamic> json) {
     return CastModel(
       castId: json['cast_id'],
-      character: json['character'],
-      creditId: json['credit_id'],
+      character: json['character'] ?? '',
+      creditId: json['credit_id'] ?? '',
       gender: json['gender'],
       id: json['id'],
-      name: json['name'],
+      name: json['name'] ?? '',
       order: json['order'],
-      profilePath: json['profile_path'],
+      profilePath: json['profile_path'] ?? '',
     );
   }
 
@@ -86,32 +116,32 @@ class CastModel extends CastEntity {
 }
 
 class Crew {
-  String? creditId;
-  String? department;
-  int? gender;
-  int? id;
-  String? job;
-  String? name;
-  String? profilePath;
+  late String creditId;
+  late String department;
+  late int? gender;
+  late int? id;
+  late String? job;
+  late String name;
+  late String profilePath;
 
   Crew({
-    this.creditId,
-    this.department,
+    required this.creditId,
+    required this.department,
     this.gender,
     this.id,
     this.job,
-    this.name,
-    this.profilePath
+    required this.name,
+    required this.profilePath
   });
 
   Crew.fromJson(Map<String, dynamic> json) {
-    creditId = json['credit_id'];
-    department = json['department'];
+    creditId = json['credit_id'] ?? '';
+    department = json['department'] ?? '';
     gender = json['gender'];
     id = json['id'];
     job = json['job'];
-    name = json['name'];
-    profilePath = json['profile_path'];
+    name = json['name'] ?? '';
+    profilePath = json['profile_path'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/theme/theme_cubit.dart';
+import '../themes/theme_color.dart';
 import '../../common/extensions/size_extensions.dart';
 
 class Logo extends StatelessWidget {
@@ -15,7 +18,10 @@ class Logo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Image.asset(
       'assets/pngs/logo.png',
-      color: Colors.white,
+      key: const ValueKey('logo_image_key'),
+      color: context.read<ThemeCubit>().state == Themes.dark
+        ? Colors.white
+        : AppColor.vulcan,
       height: height.h,
     );
   }

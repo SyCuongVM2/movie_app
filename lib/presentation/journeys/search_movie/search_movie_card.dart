@@ -6,8 +6,8 @@ import '../../../common/constants/size_constants.dart';
 import '../../../common/extensions/size_extensions.dart';
 import '../../../data/core/api_constants.dart';
 import '../../../domain/entities/movie_entity.dart';
-import '../movie_detail/movie_detail_arguments.dart';
 import '../../themes/theme_text.dart';
+import '../movie_detail/movie_detail_arguments.dart';
 
 class SearchMovieCard extends StatelessWidget {
   final MovieEntity movie;
@@ -54,7 +54,7 @@ class SearchMovieCard extends StatelessWidget {
                     style: Theme.of(context).textTheme.subtitle1,
                   ),
                   Text(
-                    movie.overview!,
+                    movie.overview ?? '',
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.greyCaption,

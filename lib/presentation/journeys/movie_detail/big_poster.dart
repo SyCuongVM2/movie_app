@@ -8,7 +8,6 @@ import '../../../common/screenutil/screenutil.dart';
 import '../../../data/core/api_constants.dart';
 import '../../../domain/entities/movie_detail_entity.dart';
 import '../../../presentation/themes/theme_text.dart';
-
 import 'movie_detail_app_bar.dart';
 
 class BigPoster extends StatelessWidget {
@@ -49,7 +48,7 @@ class BigPoster extends StatelessWidget {
               style: Theme.of(context).textTheme.headline5,
             ),
             subtitle: Text(
-              movie.releaseDate,
+              movie.releaseDate ?? '',
               style: Theme.of(context).textTheme.greySubtitle1,
             ),
             trailing: Text(

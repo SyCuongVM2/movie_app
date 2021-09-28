@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../presentation/blocs/search_movie/search_movie_bloc.dart';
-import '../../presentation/journeys/search_movie/custom_search_movie_delegate.dart';
+import '../blocs/theme/theme_cubit.dart';
+import '../blocs/search_movie/search_movie_cubit.dart';
+import '../themes/theme_color.dart';
+import '../journeys/search_movie/custom_search_movie_delegate.dart';
 import '../../common/constants/size_constants.dart';
 import '../../common/extensions/size_extensions.dart';
 import '../../common/screenutil/screenutil.dart';
@@ -29,6 +31,9 @@ class MovieAppBar extends StatelessWidget {
             icon: SvgPicture.asset(
               'assets/svgs/menu.svg',
               height: Sizes.dimen_12.h,
+              color: context.read<ThemeCubit>().state == Themes.dark
+                ? Colors.white
+                : AppColor.vulcan,
             ),
           ),
           const Expanded(
@@ -41,13 +46,15 @@ class MovieAppBar extends StatelessWidget {
               showSearch(
                 context: context, 
                 delegate: CustomSearchDelegate(
-                  BlocProvider.of<SearchMovieBloc>(context),
+                  BlocProvider.of<SearchMovieCubit>(context),
                 ),
               );
             },
             icon: Icon(
               Icons.search,
-              color: Colors.white,
+              color: context.read<ThemeCubit>().state == Themes.dark
+                ? Colors.white
+                : AppColor.vulcan,
               size: Sizes.dimen_12.h,
             ),
           ),

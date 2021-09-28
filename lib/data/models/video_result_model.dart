@@ -1,19 +1,23 @@
 import 'video_model.dart';
 
 class VideoResultModel {
-  late int id;
-  late List<VideoModel> videos;
+  final int id;
+  late final List<VideoModel> videos;
 
   VideoResultModel({required this.id, required this.videos});
 
-  VideoResultModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+  factory VideoResultModel.fromJson(Map<String, dynamic> json) {
+    var videos = List<VideoModel>.empty(growable: true);
     if (json['results'] != null) {
-      videos = <VideoModel>[];
       json['results'].forEach((v) {
-        videos.add(VideoModel.fromJson(v));
+        var _videoModel = VideoModel.fromJson(v);
+        if (_isValidVideo(_videoModel)) {
+          videos.add(VideoModel.fromJson(v));
+        }
       });
     }
+
+    return VideoResultModel(id: json['id'], videos: videos);
   }
 
   Map<String, dynamic> toJson() {
@@ -22,4 +26,10 @@ class VideoResultModel {
     data['results'] = videos.map((v) => v.toJson()).toList();
     return data;
   }
+}
+
+bool _isValidVideo(VideoModel videoModel) {
+  return videoModel.key.isNotEmpty &&
+    videoModel.name.isNotEmpty &&
+    videoModel.type.isNotEmpty;
 }

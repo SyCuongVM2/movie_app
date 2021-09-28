@@ -1,25 +1,25 @@
-import 'package:movie_app/domain/entities/movie_detail_entity.dart';
+import '../../domain/entities/movie_detail_entity.dart';
 
 class MovieDetailModel extends MovieDetailEntity {
   final bool? adult;
   final String backdropPath;
   final BelongsToCollection? belongsToCollection;
   final int? budget;
-  final List<Genres>? genres;
+  final List<Genres?>? genres;
   final String? homepage;
   final int id;
   final String? imdbId;
   final String? originalLanguage;
   final String? originalTitle;
-  final String overview;
+  final String? overview;
   final double? popularity;
   final String posterPath;
-  final List<ProductionCompanies>? productionCompanies;
-  final List<ProductionCountries>? productionCountries;
+  final List<ProductionCompanies?>? productionCompanies;
+  final List<ProductionCountries?>? productionCountries;
   final String releaseDate;
   final int? revenue;
   final int? runtime;
-  final List<SpokenLanguages>? spokenLanguages;
+  final List<SpokenLanguages?>? spokenLanguages;
   final String? status;
   final String? tagline;
   final String title;
@@ -38,7 +38,7 @@ class MovieDetailModel extends MovieDetailEntity {
     this.imdbId,
     this.originalLanguage,
     this.originalTitle,
-    required this.overview,
+    this.overview,
     this.popularity,
     required this.posterPath,
     this.productionCompanies,
@@ -52,8 +52,8 @@ class MovieDetailModel extends MovieDetailEntity {
     required this.title,
     this.video,
     required this.voteAverage,
-    this.voteCount}) : 
-  super(
+    this.voteCount
+  }) : super(
     id: id,
     title: title,
     releaseDate: releaseDate,
@@ -73,19 +73,19 @@ class MovieDetailModel extends MovieDetailEntity {
       budget: json['budget'],
       genres: _genres(json),
       homepage: json['homepage'],
-      id: json['id'],
+      id: json['id'] ?? -1,
       imdbId: json['imdb_id'],
       originalLanguage: json['original_language'],
       originalTitle: json['original_title'],
       overview: json['overview'],
       popularity: json['popularity'],
-      posterPath: json['poster_path'],
+      posterPath: json['poster_path'] ?? '',
       releaseDate: json['release_date'],
       revenue: json['revenue'],
       runtime: json['runtime'],
       status: json['status'],
       tagline: json['tagline'],
-      title: json['title'],
+      title: json['title'] ?? '',
       video: json['video'],
       voteAverage: json['vote_average'],
       voteCount: json['vote_count'],
@@ -97,11 +97,11 @@ class MovieDetailModel extends MovieDetailEntity {
     data['adult'] = adult;
     data['backdrop_path'] = backdropPath;
     if (belongsToCollection != null) {
-      data['belongs_to_collection'] = belongsToCollection!.toJson();
+      data['belongs_to_collection'] = belongsToCollection?.toJson();
     }
     data['budget'] = budget;
     if (genres != null) {
-      data['genres'] = genres!.map((v) => v.toJson()).toList();
+      data['genres'] = genres?.map((v) => v?.toJson()).toList();
     }
     data['homepage'] = homepage;
     data['id'] = id;
@@ -113,18 +113,18 @@ class MovieDetailModel extends MovieDetailEntity {
     data['poster_path'] = posterPath;
     if (productionCompanies != null) {
       data['production_companies'] =
-          productionCompanies!.map((v) => v.toJson()).toList();
+        productionCompanies?.map((v) => v?.toJson()).toList();
     }
     if (productionCountries != null) {
       data['production_countries'] =
-          productionCountries!.map((v) => v.toJson()).toList();
+        productionCountries?.map((v) => v?.toJson()).toList();
     }
     data['release_date'] = releaseDate;
     data['revenue'] = revenue;
     data['runtime'] = runtime;
     if (spokenLanguages != null) {
       data['spoken_languages'] =
-          spokenLanguages!.map((v) => v.toJson()).toList();
+        spokenLanguages?.map((v) => v?.toJson()).toList();
     }
     data['status'] = status;
     data['tagline'] = tagline;
@@ -138,7 +138,7 @@ class MovieDetailModel extends MovieDetailEntity {
 
 _genres(Map<String, dynamic> json) {
   if (json['genres'] != null) {
-    final genres = <Genres>[];
+    final genres = List<Genres>.empty(growable: true);
     json['genres'].forEach((v) {
       genres.add(Genres.fromJson(v));
     });
@@ -146,10 +146,10 @@ _genres(Map<String, dynamic> json) {
 }
 
 class BelongsToCollection {
-  int? id;
-  String? name;
-  String? posterPath;
-  String? backdropPath;
+  late int? id;
+  late String? name;
+  late String? posterPath;
+  late String? backdropPath;
 
   BelongsToCollection({this.id, this.name, this.posterPath, this.backdropPath});
 
@@ -171,8 +171,8 @@ class BelongsToCollection {
 }
 
 class Genres {
-  int? id;
-  String? name;
+  late int? id;
+  late String? name;
 
   Genres({this.id, this.name});
 
@@ -190,10 +190,10 @@ class Genres {
 }
 
 class ProductionCompanies {
-  int? id;
-  String? logoPath;
-  String? name;
-  String? originCountry;
+  late int? id;
+  late String? logoPath;
+  late String? name;
+  late String? originCountry;
 
   ProductionCompanies({this.id, this.logoPath, this.name, this.originCountry});
 
@@ -215,8 +215,8 @@ class ProductionCompanies {
 }
 
 class ProductionCountries {
-  String? iso31661;
-  String? name;
+  late String? iso31661;
+  late String? name;
 
   ProductionCountries({this.iso31661, this.name});
 
@@ -234,8 +234,8 @@ class ProductionCountries {
 }
 
 class SpokenLanguages {
-  String? iso6391;
-  String? name;
+  late String? iso6391;
+  late String? name;
 
   SpokenLanguages({this.iso6391, this.name});
 

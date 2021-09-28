@@ -5,7 +5,7 @@ import '../../../../domain/entities/movie_entity.dart';
 import 'movie_tab_card_widget.dart';
 
 class MovieListViewBuilder extends StatelessWidget {
-  final List<MovieEntity>? movies;
+  final List<MovieEntity> movies;
   
   const MovieListViewBuilder({Key? key, required this.movies}) : super(key: key);
 
@@ -15,7 +15,7 @@ class MovieListViewBuilder extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: (6.0).h),
       child: ListView.separated(
         shrinkWrap: true,
-        itemCount: movies!.length,
+        itemCount: movies.length,
         scrollDirection: Axis.horizontal,
         separatorBuilder: (context, index) {
           return SizedBox(
@@ -23,7 +23,7 @@ class MovieListViewBuilder extends StatelessWidget {
           );
         },
         itemBuilder: (context, index) {
-          final MovieEntity movie = movies![index];
+          final MovieEntity movie = movies[index];
           return MovieTabCardWidget(
             movieId: movie.id,
             title: movie.title,

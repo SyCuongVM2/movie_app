@@ -6,7 +6,7 @@ import '../../../common/constants/size_constants.dart';
 import '../../../common/constants/translation_constants.dart';
 import '../../../common/extensions/size_extensions.dart';
 import '../../../common/extensions/string_extensions.dart';
-import '../../blocs/login/login_bloc.dart';
+import '../../blocs/login/login_cubit.dart';
 import '../../themes/theme_text.dart';
 import '../../widgets/button.dart';
 import 'label_field_widget.dart';
@@ -19,7 +19,7 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  late TextEditingController _userNameController, _passwordController;
+  late TextEditingController? _userNameController, _passwordController;
   bool enableSignIn = false;
 
   @override
@@ -28,23 +28,23 @@ class _LoginFormState extends State<LoginForm> {
     _userNameController = TextEditingController();
     _passwordController = TextEditingController();
 
-    _userNameController.addListener(() {
+    _userNameController?.addListener(() {
       setState(() {
-        enableSignIn = _userNameController.text.isNotEmpty &&
-          _passwordController.text.isNotEmpty;
+        enableSignIn = (_userNameController?.text.isNotEmpty ?? false) &&
+          (_passwordController?.text.isNotEmpty ?? false);
       });
     });
-    _passwordController.addListener(() {
+    _passwordController?.addListener(() {
       setState(() {
-        enableSignIn = _userNameController.text.isNotEmpty &&
-          _passwordController.text.isNotEmpty;
+        enableSignIn = (_userNameController?.text.isNotEmpty ?? false) &&
+          (_passwordController?.text.isNotEmpty ?? false);
       });
     });
   }
   @override
   void dispose() {
-    _userNameController.dispose();
-    _passwordController.dispose();
+    _userNameController?.dispose();
+    _passwordController?.dispose();
     super.dispose();
   }
   
@@ -70,15 +70,15 @@ class _LoginFormState extends State<LoginForm> {
             LabelFieldWidget(
               label: TranslationConstants.username.t(context),
               hintText: TranslationConstants.enterTMDbUsername.t(context),
-              controller: _userNameController,
+              controller: _userNameController!,
             ),
             LabelFieldWidget(
               label: TranslationConstants.password.t(context),
               hintText: TranslationConstants.enterPassword.t(context),
-              controller: _passwordController,
+              controller: _passwordController!,
               isPasswordField: true,
             ),
-            BlocConsumer<LoginBloc, LoginState>(
+            BlocConsumer<LoginCubit, LoginState>(
               buildWhen: (previous, current) => current is LoginError,
               builder: (context, state) {
                 if (state is LoginError) {
@@ -98,18 +98,19 @@ class _LoginFormState extends State<LoginForm> {
               },
             ),
             Button(
-              onPressed: enableSignIn
-                ? () {
-                    BlocProvider.of<LoginBloc>(context).add(
-                      LoginInitiateEvent(
-                        _userNameController.text,
-                        _passwordController.text,
-                      ),
-                    );
-                  }
+              onPressed: () => enableSignIn
+                ? BlocProvider.of<LoginCubit>(context).initiateLogin(
+                    _userNameController?.text ?? '',
+                    _passwordController?.text ?? '',
+                  )
                 : null,
               text: TranslationConstants.signIn,
               isEnabled: enableSignIn,
+            ),
+            Button(
+              onPressed: () =>
+                BlocProvider.of<LoginCubit>(context).initiateGuestLogin(),
+              text: TranslationConstants.guestSignIn,
             ),
           ],
         ),

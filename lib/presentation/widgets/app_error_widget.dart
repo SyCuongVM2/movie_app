@@ -6,7 +6,6 @@ import '../../common/constants/translation_constants.dart';
 import '../../common/extensions/size_extensions.dart';
 import '../../common/extensions/string_extensions.dart';
 import '../../domain/entities/app_error.dart';
-
 import 'button.dart';
 
 class AppErrorWidget extends StatelessWidget {

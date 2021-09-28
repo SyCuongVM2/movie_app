@@ -1,16 +1,16 @@
 import 'dart:io';
 import 'package:dartz/dartz.dart';
-import 'package:movie_app/data/data_sources/movie_local_data_source.dart';
-import 'package:movie_app/data/tables/movie_table.dart';
-import 'package:movie_app/domain/entities/movie_entity.dart';
 
-import '../models/cast_crew_result_data_model.dart';
-import '../../domain/entities/video_entity.dart';
-import '../models/movie_detail_model.dart';
-import '../../domain/entities/app_error.dart';
-import '../models/movie_model.dart';
+import '../data_sources/movie_local_data_source.dart';
 import '../data_sources/movie_remote_data_source.dart';
+import '../tables/movie_table.dart';
+import '../models/cast_crew_result_data_model.dart';
+import '../models/movie_detail_model.dart';
+import '../models/movie_model.dart';
+import '../../domain/entities/movie_entity.dart';
+import '../../domain/entities/video_entity.dart';
 import '../../domain/repositories/movie_repository.dart';
+import '../../domain/entities/app_error.dart';
 
 class MovieRepositoryImpl extends MovieRepository {
   final MovieRemoteDataSource remoteDataSource;

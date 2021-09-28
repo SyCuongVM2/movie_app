@@ -5,15 +5,16 @@ import '../../../common/constants/size_constants.dart';
 import '../../../common/constants/translation_constants.dart';
 import '../../../common/extensions/string_extensions.dart';
 import '../../../common/extensions/size_extensions.dart';
-import '../../blocs/search_movie/search_movie_bloc.dart';
+import '../../blocs/search_movie/search_movie_cubit.dart';
+import '../../blocs/theme/theme_cubit.dart';
 import '../../themes/theme_color.dart';
 import '../../widgets/app_error_widget.dart';
 import 'search_movie_card.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
-  final SearchMovieBloc searchMovieBloc;
+  final SearchMovieCubit searchMovieCubit;
 
-  CustomSearchDelegate(this.searchMovieBloc);
+  CustomSearchDelegate(this.searchMovieCubit);
 
   @override
   ThemeData appBarTheme(BuildContext context) => Theme.of(context);
@@ -24,7 +25,7 @@ class CustomSearchDelegate extends SearchDelegate {
       IconButton(
         icon: Icon(
           Icons.clear,
-          color: query.isEmpty ? Colors.grey : AppColor.royalBlue,
+          color: query.isEmpty ? Colors.grey : Theme.of(context).secondaryHeaderColor,
         ),
         onPressed: query.isEmpty ? null : () => query = '',
       ),
@@ -39,7 +40,9 @@ class CustomSearchDelegate extends SearchDelegate {
       },
       child: Icon(
         Icons.arrow_back_ios,
-        color: Colors.white,
+        color: context.read<ThemeCubit>().state == Themes.dark
+          ? Colors.white
+          : AppColor.vulcan,
         size: Sizes.dimen_12.h,
       ),
     );
@@ -47,17 +50,15 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    searchMovieBloc.add(
-      SearchTermChangedEvent(query),
-    );
+    searchMovieCubit.searchTermChanged(query);
 
-    return BlocBuilder<SearchMovieBloc, SearchMovieState>(
-      bloc: searchMovieBloc,
+    return BlocBuilder<SearchMovieCubit, SearchMovieState>(
+      bloc: searchMovieCubit,
       builder: (context, state) {
         if (state is SearchMovieError) {
           return AppErrorWidget(
             errorType: state.errorType,
-            onPressed: () => searchMovieBloc.add(SearchTermChangedEvent(query)),
+            onPressed: () => searchMovieCubit.searchTermChanged(query),
           );
         } else if (state is SearchMovieLoaded) {
           final movies = state.movies;

@@ -28,4 +28,24 @@ class AppRepositoryImpl extends AppRepository {
       return const Left(AppError(AppErrorType.database));
     }
   }
+
+  @override
+  Future<Either<AppError, String>> getPreferredTheme() async {
+    try {
+      final response = await languageLocalDataSource.getPreferredTheme();
+      return Right(response);
+    } on Exception {
+      return const Left(AppError(AppErrorType.database));
+    }
+  }
+
+  @override
+  Future<Either<AppError, void>> updateTheme(String theme) async {
+    try {
+      final response = await languageLocalDataSource.updateTheme(theme);
+      return Right(response);
+    } on Exception {
+      return const Left(AppError(AppErrorType.database));
+    }
+  }
 }

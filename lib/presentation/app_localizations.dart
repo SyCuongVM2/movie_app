@@ -6,11 +6,12 @@ import '../common/constants/languages.dart';
 
 class AppLocalizations {
   final Locale locale;
-  late Map<String, String> _localizedStrings = {};
+  late Map<String, String> _localizedStrings;
 
   AppLocalizations(this.locale);
 
-  static AppLocalizations of(context) => Localizations.of<AppLocalizations>(context, AppLocalizations)!;
+  static AppLocalizations? of(context) => Localizations.of<AppLocalizations>(context, AppLocalizations);
+
 
   Future<bool> load() async {
     final jsonString = await rootBundle.loadString('assets/languages/${locale.languageCode}.json');
@@ -21,8 +22,8 @@ class AppLocalizations {
     return true;
   }
 
-  String translate(String key) {
-    return _localizedStrings[key]!;
+  String? translate(String key) {
+    return _localizedStrings[key];
   }
 
   static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationDelegate();

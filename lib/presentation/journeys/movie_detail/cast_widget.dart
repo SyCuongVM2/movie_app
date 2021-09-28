@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../common/constants/size_constants.dart';
 import '../../../common/extensions/size_extensions.dart';
 import '../../../data/core/api_constants.dart';
-import '../../../presentation/blocs/cast/cast_bloc.dart';
+import '../../../presentation/blocs/cast/cast_cubit.dart';
 import '../../../presentation/themes/theme_text.dart';
 
 class CastWidget extends StatelessWidget {
@@ -13,7 +13,7 @@ class CastWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CastBloc, CastState>(
+    return BlocBuilder<CastCubit, CastState>(
       builder: (context, state) {
         if (state is CastLoaded) {
           return SizedBox(

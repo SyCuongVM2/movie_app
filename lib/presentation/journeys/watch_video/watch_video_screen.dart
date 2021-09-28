@@ -91,7 +91,7 @@ class _WatchVideoScreenState extends State<WatchVideoScreen> {
                               ),
                               Expanded(
                                 child: Padding(
-                                  padding:  EdgeInsets.symmetric(horizontal: 8.0.w),
+                                  padding:  EdgeInsets.symmetric(horizontal: Sizes.dimen_8.w),
                                   child: Text(
                                     _videos[i].title,
                                     style: Theme.of(context).textTheme.subtitle1,

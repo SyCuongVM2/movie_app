@@ -3,7 +3,7 @@ import 'movie_model.dart';
 class MoviesResultModel {
   late final List<MovieModel> movies;
 
-  MoviesResultModel({ required this.movies });
+  MoviesResultModel({required this.movies});
 
   factory MoviesResultModel.fromJson(Map<String, dynamic> json) {
     var movies = List<MovieModel>.empty(growable: true);

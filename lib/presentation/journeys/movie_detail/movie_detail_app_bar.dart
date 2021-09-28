@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movie_app/domain/entities/movie_detail_entity.dart';
-import 'package:movie_app/domain/entities/movie_entity.dart';
-import 'package:movie_app/presentation/blocs/favorite/favorite_bloc.dart';
 
+import '../../../domain/entities/movie_detail_entity.dart';
+import '../../../domain/entities/movie_entity.dart';
 import '../../../common/constants/size_constants.dart';
 import '../../../common/extensions/size_extensions.dart';
+import '../../blocs/favorite/favorite_cubit.dart';
 
 class MovieDetailAppBar extends StatelessWidget {
   final MovieDetailEntity movieDetailEntity;
@@ -30,15 +30,13 @@ class MovieDetailAppBar extends StatelessWidget {
             size: Sizes.dimen_12.h,
           ),
         ),
-        BlocBuilder<FavoriteBloc, FavoriteState>(
+        BlocBuilder<FavoriteCubit, FavoriteState>(
           builder: (context, state) {
             if (state is IsFavoriteMovie) {
               return GestureDetector(
-                onTap: () => BlocProvider.of<FavoriteBloc>(context).add(
-                  ToggleFavoriteMovieEvent(
-                    MovieEntity.fromMovieDetailEntity(movieDetailEntity),
-                    state.isMovieFavorite,
-                  ),
+                onTap: () => BlocProvider.of<FavoriteCubit>(context).toggleFavoriteMovie(
+                  MovieEntity.fromMovieDetailEntity(movieDetailEntity),
+                  state.isMovieFavorite,
                 ),
                 child: Icon(
                   state.isMovieFavorite

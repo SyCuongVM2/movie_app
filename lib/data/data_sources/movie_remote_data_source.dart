@@ -1,11 +1,10 @@
-import 'package:movie_app/data/models/cast_crew_result_data_model.dart';
-import 'package:movie_app/data/models/video_model.dart';
-import 'package:movie_app/data/models/video_result_model.dart';
-
-import '../../data/models/movie_detail_model.dart';
-import '../../data/core/api_client.dart';
-import '../../data/models/movies_result_model.dart';
-import '../../data/models/movie_model.dart';
+import '../models/cast_crew_result_data_model.dart';
+import '../models/video_model.dart';
+import '../models/video_result_model.dart';
+import '../models/movie_detail_model.dart';
+import '../core/api_client.dart';
+import '../models/movies_result_model.dart';
+import '../models/movie_model.dart';
 
 abstract class MovieRemoteDataSource {
   Future<List<MovieModel>> getTrending();

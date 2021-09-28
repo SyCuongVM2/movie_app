@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:movie_app/common/constants/size_constants.dart';
-import 'package:movie_app/common/extensions/size_extensions.dart';
-import 'package:movie_app/presentation/themes/theme_text.dart';
+import '../../../common/constants/size_constants.dart';
+import '../../../common/extensions/size_extensions.dart';
+import '../../themes/theme_text.dart';
 
 class LabelFieldWidget extends StatelessWidget {
   final String label;

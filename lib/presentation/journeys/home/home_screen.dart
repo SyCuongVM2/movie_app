@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movie_app/presentation/blocs/search_movie/search_movie_bloc.dart';
 
+import '../../../di/get_it.dart';
+import '../../blocs/search_movie/search_movie_cubit.dart';
+import '../../blocs/movie_tabbed/movie_tabbed_cubit.dart';
+import '../../blocs/movie_backdrop/movie_backdrop_cubit.dart';
+import '../../blocs/movie_carousel/movie_carousel_cubit.dart';
 import '../../widgets/app_error_widget.dart';
 import '../drawer/navigation_drawer.dart';
-import '../../blocs/movie_tabbed/movie_tabbed_bloc.dart';
-import '../../blocs/movie_backdrop/movie_backdrop_bloc.dart';
-import '../../../di/get_it.dart';
-import '../../blocs/movie_carousel/movie_carousel_bloc.dart';
 import 'movie_carousel/movie_carousel_widget.dart';
 import 'movie_tabbed/movie_tabbed_widget.dart';
 
@@ -19,50 +19,42 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late MovieCarouselBloc movieCarouselBloc;
-  late MovieBackdropBloc movieBackdropBloc;
-  late MovieTabbedBloc movieTabbedBloc;
-  late SearchMovieBloc searchMovieBloc;
+  late MovieCarouselCubit movieCarouselCubit;
+  late MovieBackdropCubit movieBackdropCubit;
+  late MovieTabbedCubit movieTabbedCubit;
+  late SearchMovieCubit searchMovieCubit;
 
   @override
   void initState() {
     super.initState();
-    movieCarouselBloc = getItInstance<MovieCarouselBloc>();
-    movieBackdropBloc = movieCarouselBloc.movieBackdropBloc;
-    movieTabbedBloc = getItInstance<MovieTabbedBloc>();
-    searchMovieBloc = getItInstance<SearchMovieBloc>();
-    movieCarouselBloc.add(const CarouselLoadEvent());
+    movieCarouselCubit = getItInstance<MovieCarouselCubit>();
+    movieBackdropCubit = movieCarouselCubit.movieBackdropCubit;
+    movieTabbedCubit = getItInstance<MovieTabbedCubit>();
+    searchMovieCubit = getItInstance<SearchMovieCubit>();
+    movieCarouselCubit.loadCarousel();
   }
   @override
   void dispose() {
     super.dispose();
-    movieCarouselBloc.close();
-    movieBackdropBloc.close();
-    searchMovieBloc.close();
-    movieTabbedBloc.close();
+    movieCarouselCubit.close();
+    movieBackdropCubit.close();
+    searchMovieCubit.close();
+    movieTabbedCubit.close();
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => movieCarouselBloc,
-        ),
-        BlocProvider(
-          create: (context) => movieBackdropBloc,
-        ),
-        BlocProvider(
-          create: (context) => movieTabbedBloc,
-        ),
-        BlocProvider(
-          create: (context) => searchMovieBloc,
-        ),
+        BlocProvider(create: (context) => movieCarouselCubit),
+        BlocProvider(create: (context) => movieBackdropCubit),
+        BlocProvider(create: (context) => movieTabbedCubit),
+        BlocProvider(create: (context) => searchMovieCubit),
       ],
       child: Scaffold(
         drawer:  const NavigationDrawer(),
-        body: BlocBuilder<MovieCarouselBloc, MovieCarouselState>(
-          bloc: movieCarouselBloc,
+        body: BlocBuilder<MovieCarouselCubit, MovieCarouselState>(
+          bloc: movieCarouselCubit,
           builder: (context, state) {
             if (state is MovieCarouselLoaded) {
               return Stack(
@@ -85,9 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             } else if (state is MovieCarouselError) {
               return AppErrorWidget(
-                onPressed: () => movieCarouselBloc.add(
-                  const CarouselLoadEvent(),
-                ),
+                onPressed: () => movieCarouselCubit.loadCarousel(),
                 errorType: state.errorType,
               );
             }

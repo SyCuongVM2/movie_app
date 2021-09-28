@@ -5,8 +5,8 @@ import '../../../../common/constants/route_constants.dart';
 import '../../../../common/constants/size_constants.dart';
 import '../../../../common/extensions/size_extensions.dart';
 import '../../../../common/extensions/string_extensions.dart';
-import '../../movie_detail/movie_detail_arguments.dart';
 import '../../../../data/core/api_constants.dart';
+import '../../movie_detail/movie_detail_arguments.dart';
 
 class MovieTabCardWidget extends StatelessWidget {
   final int movieId;

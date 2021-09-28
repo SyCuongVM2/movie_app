@@ -31,7 +31,7 @@ class MovieEntity extends Equatable {
     return MovieEntity(
       posterPath: movieDetailEntity.posterPath,
       id: movieDetailEntity.id,
-      backdropPath: movieDetailEntity.backdropPath,
+      backdropPath: movieDetailEntity.backdropPath ?? '',
       title: movieDetailEntity.title,
       voteAverage: movieDetailEntity.voteAverage,
       releaseDate: movieDetailEntity.releaseDate,
